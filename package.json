@@ -1,0 +1,20 @@
+{
+  "name": "advent-of-code",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "vitest",
+    "t": "npm run test",
+    "test:watch": "vitest --watch",
+    "tw": "npm run test:watch"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "ts-node": "^10.9.1",
+    "typescript": "^5.3.2",
+    "vitest": "^1.0.1"
+  }
+}
