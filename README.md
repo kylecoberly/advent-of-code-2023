@@ -1,3 +1,3 @@
 # Kyle Coberly's Advent of Code 2023
 
-- [1](1)
+- [1: Trebuchet](1)
