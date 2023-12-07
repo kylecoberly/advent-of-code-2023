@@ -2,7 +2,6 @@ import {
   getOutsideNumber,
   sumOutsideNumbers,
   convertNumberWord,
-  chompNextNumber,
 } from "./answer";
 import { expect, describe, test } from "vitest";
 
@@ -73,22 +72,6 @@ describe("number conversions", () => {
       expect(convertNumberWord(input)).toBe(output);
     });
   });
-});
-
-test("chompNextNumber chomps a number", () => {
-  expect(chompNextNumber("4")).toEqual(["4", ""]);
-});
-test("chompNextNumber chomps a word number", () => {
-  expect(chompNextNumber("four")).toEqual(["4", ""]);
-});
-test("chompNextNumber chomps two numbers", () => {
-  expect(chompNextNumber("four3")).toEqual(["4", "3"]);
-});
-test("chompNextNumber chomps through trash", () => {
-  expect(chompNextNumber("trash3")).toEqual(["3", ""]);
-});
-test("chompNextNumber chomps around trash", () => {
-  expect(chompNextNumber("tra1sh")).toEqual(["1", "sh"]);
 });
 
 describe("part 1 examples", () => {
