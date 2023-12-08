@@ -18,7 +18,7 @@ export function validateGame(gameString: string) {
   });
 }
 
-export function getGameRounds(game: string) {
+export function getGameRounds(game: string): Round[] {
   const [_, roundsString] = game.split(":");
   return roundsString
     .split(";")
@@ -45,4 +45,51 @@ export function getGameRounds(game: string) {
 function getId(game: string) {
   const [idString] = game.split(":");
   return Number(idString.match(/\d+/)?.[0]);
+}
+
+export function getMinimumCubes(code: string) {
+  const rounds = getGameRounds(code);
+  const { red, green, blue } = maxCountsByColor(rounds);
+  return {
+    red,
+    green,
+    blue,
+  };
+}
+
+type Round = {
+  red: number;
+  blue: number;
+  green: number;
+};
+function maxCountsByColor(rounds: Round[]) {
+  return rounds.reduce(
+    (maxCounts, round) => {
+      maxCounts.red = Math.max(round.red, maxCounts.red);
+      maxCounts.green = Math.max(round.green, maxCounts.green);
+      maxCounts.blue = Math.max(round.blue, maxCounts.blue);
+
+      return maxCounts;
+    },
+    {
+      red: 0,
+      green: 0,
+      blue: 0,
+    } as const,
+  );
+}
+
+export function getCubePower(game: string) {
+  const rounds = getGameRounds(game);
+  const counts = maxCountsByColor(rounds);
+  const product = Object.values(counts).reduce(
+    (product, number) => number * product,
+    1,
+  );
+
+  return product;
+}
+
+export function sumCubePowers(games: string[]) {
+  return games.map(getCubePower).reduce((sum, number) => sum + number, 0);
 }
