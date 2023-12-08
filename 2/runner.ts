@@ -1,4 +1,5 @@
 import data from "./data";
-import { sumCubePowers } from "./answer";
+import { sumCubePowers, sumPossibleGameIds } from "./answer";
 
-console.log(sumCubePowers(data));
+console.log("Part 1: ", sumPossibleGameIds(data));
+console.log("Part 2: ", sumCubePowers(data));

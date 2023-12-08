@@ -82,12 +82,7 @@ function maxCountsByColor(rounds: Round[]) {
 export function getCubePower(game: string) {
   const rounds = getGameRounds(game);
   const counts = maxCountsByColor(rounds);
-  const product = Object.values(counts).reduce(
-    (product, number) => number * product,
-    1,
-  );
-
-  return product;
+  return Object.values(counts).reduce((product, number) => number * product, 1);
 }
 
 export function sumCubePowers(games: string[]) {
