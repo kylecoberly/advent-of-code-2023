@@ -1,3 +1,22 @@
+- There are multiple rounds of a game involving cubes
+- Cubes are either red, green, or blue, their number is unknown
+- You'll see a selection of them multiple times per game
+- Determine which games would have been possible with 12 red, 13 green, and 14 blue cubes
+- Goal: Add up the IDs of possible games
+
+Examples:
+
+Game 1: 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green
+Game 2: 1 blue, 2 green; 3 green, 4 blue, 1 red; 1 green, 1 blue
+Game 3: 8 green, 6 blue, 20 red; 5 blue, 4 red, 13 green; 5 green, 1 red
+Game 4: 1 green, 3 red, 6 blue; 3 green, 6 red; 3 green, 15 blue, 14 red
+Game 5: 6 red, 1 blue, 3 green; 2 blue, 1 red, 2 green
+
+1, 3, and 5 are possible
+2 and 4 are not
+
+Answer is 8
+
 ## Original Prompt
 
 --- Day 2: Cube Conundrum ---
