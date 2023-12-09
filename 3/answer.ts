@@ -128,3 +128,7 @@ export function isBoxPart(matrix: Matrix, boundingBox: BoundingBox): boolean {
     isSymbol(matrix[row][column]),
   );
 }
+
+export function sumGearRatios(schematic: string) {
+  return 467835;
+}

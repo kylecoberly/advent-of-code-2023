@@ -7,6 +7,7 @@ import {
   isSymbol,
   getNumberByBox,
   isBoxPart,
+  sumGearRatios,
 } from "./answer";
 
 describe("Gear ratios part 1 given examples", () => {
@@ -61,6 +62,25 @@ describe("Gear ratios part 1 given examples", () => {
 		`.trim();
 
     expect(getSumFromSchematic(sampleSchematic)).toBe(8);
+  });
+});
+
+describe("Gear ratios part 2 given examples", () => {
+  test("sumGearRatios returns sum", () => {
+    const sampleSchematic = `
+467..114..
+..._......
+..35..633.
+......#...
+617_......
+.....+.58.
+..592.....
+......755.
+...$.*....
+.664.598..
+		`.trim();
+
+    expect(sumGearRatios(sampleSchematic)).toBe(467835);
   });
 });
 
