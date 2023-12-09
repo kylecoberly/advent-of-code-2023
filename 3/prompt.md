@@ -1,3 +1,29 @@
+- Input: Engine schematic, visual representation of an engine
+- What part is missing from the engine
+- Add up the part numbers
+- Any number adjacent to a symbol in any direction is a part number
+- . is not a symbol
+- Numbers can be multiple digits
+
+Example:
+
+```
+467..114..
+..._......
+..35..633.
+......#...
+617_......
+.....+.58.
+..592.....
+......755.
+...$.\*....
+.664.598..
+```
+
+- 114 and 58 are not adjacent to a symbol
+- The sum of the other numbers is 4361
+- Output is 4361
+
 ## Original Prompt
 
 --- Day 3: Gear Ratios ---
