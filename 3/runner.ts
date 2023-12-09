@@ -1,4 +1,4 @@
 import data from "./data";
-import {} from "./answer";
+import { getSumFromSchematic } from "./answer";
 
-console.log("Part 1: ");
+console.log("Part 1: ", getSumFromSchematic(data));
