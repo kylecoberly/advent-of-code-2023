@@ -8,6 +8,8 @@ import {
   getNumberByBox,
   isBoxPart,
   sumGearRatios,
+  getSymbolCoordinates,
+  isGear,
 } from "./answer";
 
 describe("Gear ratios part 1 given examples", () => {
@@ -278,4 +280,60 @@ test("isBoxPart rejects non-part", () => {
   ];
 
   expect(isBoxPart(matrix, [[1, 2], 1])).toBe(false);
+});
+
+test("getSymbolCoordinates gets 1 symbol", () => {
+  const matrix = [
+    [".", ".", "."],
+    [".", "!", "."],
+    [".", ".", "."],
+  ];
+
+  expect(getSymbolCoordinates(matrix)).toEqual([[1, 1]]);
+});
+
+test("getSymbolCoordinates gets multiple symbols", () => {
+  const matrix = [
+    ["!", ".", "."],
+    [".", "!", "."],
+    [".", ".", "!"],
+  ];
+
+  expect(getSymbolCoordinates(matrix)).toEqual([
+    [0, 0],
+    [1, 1],
+    [2, 2],
+  ]);
+});
+
+describe("isGear", () => {
+  test("isGear correctly identifies gear", () => {
+    const matrix = [
+      ["1", ".", "."],
+      [".", "!", "."],
+      [".", ".", "1"],
+    ];
+
+    expect(isGear(matrix, [1, 1])).toBe(true);
+  });
+
+  test("isGear correctly rejects non-gear", () => {
+    const matrix = [
+      [".", ".", "."],
+      [".", "!", "."],
+      [".", ".", "1"],
+    ];
+
+    expect(isGear(matrix, [1, 1])).toBe(false);
+  });
+
+  test("isGear correctly identifies gear with long number", () => {
+    const matrix = [
+      ["1", "2", "3"],
+      [".", "!", "."],
+      [".", ".", "1"],
+    ];
+
+    expect(isGear(matrix, [1, 1])).toBe(true);
+  });
 });

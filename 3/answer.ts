@@ -42,6 +42,21 @@ export function getNumberBoxes(matrix: Matrix): BoundingBox[] {
   );
 }
 
+export function getSymbolCoordinates(matrix: Matrix): Coordinate[] {
+  return matrix.reduce(
+    (coordinates: Coordinate[], row: string[], rowIndex: number) => {
+      for (let columnIndex = 0; columnIndex < row.length; columnIndex++) {
+        const character = matrix[rowIndex][columnIndex];
+        if (isSymbol(character)) {
+          coordinates.push([rowIndex, columnIndex] as const);
+        }
+      }
+      return coordinates;
+    },
+    [],
+  );
+}
+
 export function getSurroundingCoordinates(
   [[row, column], length]: BoundingBox,
   gridSize: number,
@@ -129,6 +144,52 @@ export function isBoxPart(matrix: Matrix, boundingBox: BoundingBox): boolean {
   );
 }
 
+export function isNumber(matrix: Matrix, [row, column]: Coordinate) {
+  return matrix[row][column]?.match(/\d/);
+}
+
+export function isGear(matrix: Matrix, coordinate: Coordinate) {
+  const surroundingCoordinates = getSurroundingCoordinates(
+    [coordinate, 1],
+    matrix.length,
+  );
+  const surroundingNumbers = surroundingCoordinates.filter((coordinate) =>
+    isNumber(matrix, coordinate),
+  );
+  const surroundingPartNumberCount = surroundingNumbers.reduce(
+    (count, [row, column]) => {
+      if (matrix[row][column - 1]?.match(/\d/)) {
+        return count;
+      } else {
+        return count + 1;
+      }
+    },
+    0,
+  );
+
+  return surroundingPartNumberCount === 2;
+}
+
+export function getSurroundingNumberBoxes(
+  matrix: Matrix,
+  coordinate: Coordinate,
+): BoundingBox[] {
+  // Logic to get the boxes for each number here
+}
+
 export function sumGearRatios(schematic: string) {
+  const matrix = createSchematicMatrix(schematic);
+  const symbolLocations = getSymbolCoordinates(matrix);
+  const onlyGears = symbolLocations.filter((coordinate) =>
+    isGear(matrix, coordinate),
+  );
+  onlyGears
+    .map((gearCoordinate) =>
+      getSurroundingNumberBoxes(matrix, gearCoordinate)
+        .map((box) => getNumberByBox(matrix, box))
+        .reduce((product, number) => product * number, 1),
+    )
+    .reduce((sum, number) => sum + number, 0);
+
   return 467835;
 }

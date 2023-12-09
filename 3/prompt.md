@@ -31,6 +31,14 @@ Example:
 - A gear ratio is the product of those two numbers
 - Sum all the gear ratios
 
+Strategy:
+
+- Find all symbols
+- Determine if they're gears by counting the numbers around them
+- If they're gears, get their surrounding numbers
+- Get the product of each gear
+- Sum all the products
+
 ## Original Prompt
 
 --- Day 3: Gear Ratios ---
