@@ -5,7 +5,7 @@ type BoundingBox = [Coordinate, number];
 export function getSumFromSchematic(schematic: string) {
   const matrix = createSchematicMatrix(schematic);
 
-  return getNumberBoxes(matrix)
+  return getAllNumberBoxes(matrix)
     .filter((box) => isBoxPart(matrix, box))
     .map((box) => getNumberByBox(matrix, box))
     .reduce((sum, number) => sum + number, 0);
@@ -15,25 +15,14 @@ export function createSchematicMatrix(schematic: string) {
   return schematic.split("\n").map((line) => line.split(""));
 }
 
-export function getNumberBoxes(matrix: Matrix): BoundingBox[] {
+export function getAllNumberBoxes(matrix: Matrix): BoundingBox[] {
   return matrix.reduce(
     (boxes: BoundingBox[], row: string[], rowIndex: number) => {
       for (let columnIndex = 0; columnIndex < row.length; columnIndex++) {
-        const character = matrix[rowIndex][columnIndex];
-        if (character.match(/\d/)) {
-          let numberLength = 1;
-          while (columnIndex < matrix[rowIndex].length) {
-            if (matrix[rowIndex][columnIndex + 1]?.match(/\d/)) {
-              numberLength++;
-              columnIndex++;
-            } else {
-              break;
-            }
-          }
-          boxes.push([
-            [rowIndex, columnIndex - (numberLength - 1)],
-            numberLength,
-          ] as const);
+        const numberBox = getNumberBox(matrix, [rowIndex, columnIndex]);
+        if (numberBox) {
+          columnIndex += numberBox[1] - 1;
+          boxes.push(numberBox);
         }
       }
       return boxes;
@@ -148,48 +137,60 @@ export function isNumber(matrix: Matrix, [row, column]: Coordinate) {
   return matrix[row][column]?.match(/\d/);
 }
 
-export function isGear(matrix: Matrix, coordinate: Coordinate) {
+export function getGearValue(matrix: Matrix, coordinate: Coordinate) {
   const surroundingCoordinates = getSurroundingCoordinates(
     [coordinate, 1],
     matrix.length,
   );
-  const surroundingNumbers = surroundingCoordinates.filter((coordinate) =>
-    isNumber(matrix, coordinate),
-  );
-  const surroundingPartNumberCount = surroundingNumbers.reduce(
-    (count, [row, column]) => {
-      if (matrix[row][column - 1]?.match(/\d/)) {
-        return count;
-      } else {
-        return count + 1;
+  const surroundingPartNumbers = surroundingCoordinates
+    .filter((coordinate) => isNumber(matrix, coordinate))
+    .reduce<number[]>((partNumbers, [row, column]) => {
+      let previousCharacter = column > 0 ? matrix[row][column - 1] : null;
+      if (column === coordinate[1] - 1 && previousCharacter?.match(/\d/)) {
+        while (previousCharacter?.match(/\d/)) {
+          column--;
+          previousCharacter = column > 0 ? matrix[row][column - 1] : null;
+        }
       }
-    },
-    0,
-  );
 
-  return surroundingPartNumberCount === 2;
-}
+      if (!previousCharacter?.match(/\d/)) {
+        const numberBox = getNumberBox(matrix, [row, column]);
+        const number = getNumberByBox(matrix, numberBox!);
+        partNumbers.push(number);
+      }
+      return partNumbers;
+    }, []);
 
-export function getSurroundingNumberBoxes(
-  matrix: Matrix,
-  coordinate: Coordinate,
-): BoundingBox[] {
-  // Logic to get the boxes for each number here
+  return surroundingPartNumbers.length === 2
+    ? surroundingPartNumbers.reduce((product, number) => product * number, 1)
+    : 0;
 }
 
 export function sumGearRatios(schematic: string) {
   const matrix = createSchematicMatrix(schematic);
   const symbolLocations = getSymbolCoordinates(matrix);
-  const onlyGears = symbolLocations.filter((coordinate) =>
-    isGear(matrix, coordinate),
-  );
-  onlyGears
-    .map((gearCoordinate) =>
-      getSurroundingNumberBoxes(matrix, gearCoordinate)
-        .map((box) => getNumberByBox(matrix, box))
-        .reduce((product, number) => product * number, 1),
-    )
-    .reduce((sum, number) => sum + number, 0);
 
-  return 467835;
+  return symbolLocations
+    .map((symbolLocation) => getGearValue(matrix, symbolLocation))
+    .reduce((sum, number) => sum + number, 0);
+}
+
+function getNumberBox(
+  matrix: Matrix,
+  [row, column]: Coordinate,
+): BoundingBox | null {
+  const character = matrix[row][column];
+  if (character?.match(/\d/)) {
+    let numberLength = 1;
+    while (column < matrix[row].length) {
+      if (matrix[row][column + 1]?.match(/\d/)) {
+        numberLength++;
+        column++;
+      } else {
+        break;
+      }
+    }
+    return [[row, column - (numberLength - 1)], numberLength];
+  }
+  return null;
 }

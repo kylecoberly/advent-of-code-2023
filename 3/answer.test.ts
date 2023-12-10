@@ -2,14 +2,14 @@ import { describe, test, expect } from "vitest";
 import {
   createSchematicMatrix,
   getSumFromSchematic,
-  getNumberBoxes,
+  getAllNumberBoxes,
   getSurroundingCoordinates,
   isSymbol,
   getNumberByBox,
   isBoxPart,
   sumGearRatios,
   getSymbolCoordinates,
-  isGear,
+  getGearValue,
 } from "./answer";
 
 describe("Gear ratios part 1 given examples", () => {
@@ -18,10 +18,10 @@ describe("Gear ratios part 1 given examples", () => {
     // 467, 35, 633, 617, 58, 592, 755, 664, and 598 are parts
     const sampleSchematic = `
 467..114..
-..._......
+...*......
 ..35..633.
 ......#...
-617_......
+617*......
 .....+.58.
 ..592.....
 ......755.
@@ -67,8 +67,8 @@ describe("Gear ratios part 1 given examples", () => {
   });
 });
 
-describe("Gear ratios part 2 given examples", () => {
-  test("sumGearRatios returns sum", () => {
+describe("Gear ratios part 2", () => {
+  test("sumGearRatios returns sum, given example", () => {
     const sampleSchematic = `
 467..114..
 ..._......
@@ -83,6 +83,39 @@ describe("Gear ratios part 2 given examples", () => {
 		`.trim();
 
     expect(sumGearRatios(sampleSchematic)).toBe(467835);
+  });
+
+  test("sumGearRatios returns sum, sides", () => {
+    const sampleSchematic = `
+111....111
+!........!
+1........1
+..........
+111....111
+..........
+..........
+1........1
+!........!
+111....111
+		`.trim();
+
+    expect(sumGearRatios(sampleSchematic)).toBe(444);
+  });
+  test("sumGearRatios returns sum, left", () => {
+    const sampleSchematic = `
+467.......
+..._......
+..35......
+..........
+..........
+..........
+..........
+..........
+..........
+..........
+		`.trim();
+
+    expect(sumGearRatios(sampleSchematic)).toBe(16345);
   });
 });
 
@@ -102,45 +135,45 @@ test("createSchematicMatrix creates a matrix from a schematic", () => {
   expect(createSchematicMatrix(schematic)).toEqual(matrix);
 });
 
-describe("getNumberBoxes", () => {
-  test("getNumberBoxes returns bounding boxes for 1 number", () => {
+describe("getAllNumberBoxes", () => {
+  test("getAllNumberBoxes returns bounding boxes for 1 number", () => {
     const matrix = [
       [".", ".", "."],
       [".", "5", "."],
       [".", ".", "."],
     ];
-    expect(getNumberBoxes(matrix)).toEqual([[[1, 1], 1]]);
+    expect(getAllNumberBoxes(matrix)).toEqual([[[1, 1], 1]]);
   });
 
-  test("getNumberBoxes returns bounding boxes for multiple numbers", () => {
+  test("getAllNumberBoxes returns bounding boxes for multiple numbers", () => {
     const matrix = [
       ["1", ".", "."],
       [".", "5", "."],
       [".", ".", "9"],
     ];
-    expect(getNumberBoxes(matrix)).toEqual([
+    expect(getAllNumberBoxes(matrix)).toEqual([
       [[0, 0], 1],
       [[1, 1], 1],
       [[2, 2], 1],
     ]);
   });
 
-  test("getNumberBoxes returns bounding boxes for multi digit numbers", () => {
+  test("getAllNumberBoxes returns bounding boxes for multi digit numbers", () => {
     const matrix = [
       ["1", "2", "."],
       [".", ".", "."],
       [".", ".", "."],
     ];
-    expect(getNumberBoxes(matrix)).toEqual([[[0, 0], 2]]);
+    expect(getAllNumberBoxes(matrix)).toEqual([[[0, 0], 2]]);
   });
 
-  test("getNumberBoxes returns bounding boxes for multi digit numbers", () => {
+  test("getAllNumberBoxes returns bounding boxes for multi digit numbers", () => {
     const matrix = [
       ["1", "2", "."],
       [".", ".", "."],
       ["7", "8", "9"],
     ];
-    expect(getNumberBoxes(matrix)).toEqual([
+    expect(getAllNumberBoxes(matrix)).toEqual([
       [[0, 0], 2],
       [[2, 0], 3],
     ]);
@@ -306,34 +339,34 @@ test("getSymbolCoordinates gets multiple symbols", () => {
   ]);
 });
 
-describe("isGear", () => {
-  test("isGear correctly identifies gear", () => {
+describe("getGearValue", () => {
+  test("getGearValue correctly identifies gear", () => {
     const matrix = [
       ["1", ".", "."],
       [".", "!", "."],
       [".", ".", "1"],
     ];
 
-    expect(isGear(matrix, [1, 1])).toBe(true);
+    expect(getGearValue(matrix, [1, 1])).toBe(1);
   });
 
-  test("isGear correctly rejects non-gear", () => {
+  test("getGearValue correctly rejects non-gear", () => {
     const matrix = [
       [".", ".", "."],
       [".", "!", "."],
       [".", ".", "1"],
     ];
 
-    expect(isGear(matrix, [1, 1])).toBe(false);
+    expect(getGearValue(matrix, [1, 1])).toBe(0);
   });
 
-  test("isGear correctly identifies gear with long number", () => {
+  test("getGearValue correctly identifies gear with long number", () => {
     const matrix = [
       ["1", "2", "3"],
       [".", "!", "."],
       [".", ".", "1"],
     ];
 
-    expect(isGear(matrix, [1, 1])).toBe(true);
+    expect(getGearValue(matrix, [1, 1])).toBe(123);
   });
 });
